@@ -9,7 +9,7 @@ db = client.test
 coll = db.NER_vectors
 cursor = coll.find()
 
-embeddings_dict = {}
+embeddings_dict = {} # load in vectors
 for document in cursor:
     word = document["word"]
     temp = document["vector"].split(" ")
@@ -29,12 +29,13 @@ def find_closest(embedding):
 
 # print(find_closest(embeddings_dict['Monsanto'])[1:10])
 
-tsne = TSNE(n_components=2, random_state=0)
+tsne = TSNE(n_components=2, random_state=0, perplexity=50, n_iter=1000)
 words = list(embeddings_dict.keys())
 vectors = [embeddings_dict[word] for word in words]
-Y = tsne.fit_transform(vectors[:200])
+Y = tsne.fit_transform(vectors)
+np.save('tsne.py', Y)
 plt.scatter(Y[:, 0], Y[:, 1], 0.2)
 
 for label, x, y in zip(words, Y[:, 0], Y[:, 1]):
     plt.annotate(label, xy=(x, y), xytext=(0,0), textcoords="offset points", fontsize=2)
-plt.savefig('glove_test.png', dpi=1200)
+plt.savefig('glove_test_P50_I1000.png', dpi=1200)
