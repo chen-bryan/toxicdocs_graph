@@ -7,18 +7,19 @@ coll = db.NER_vectors
 cursor = coll.find()
 words = []
 vectors = []
+counter = 0
 for document in cursor:
     word = document["word"]
-    vector = document["vector"].split(" ")
-    vector = "\\t".join(vector)
-    
+    vector = '    '.join(document["vector"].split())
+    counter += 1
     words.append(word)
     vectors.append(vector)
-
+print(counter)
 with open('vectors.tsv', 'w') as f:
     for item in vectors:
         f.write(f'{item}\n')
 
-with open('metadata.tsv', 'w') as f:
+with open('metadatafull.tsv', 'w') as f:
     for item in words:
         f.write(f'{item}\n')
+
